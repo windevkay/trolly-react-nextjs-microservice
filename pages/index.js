@@ -1,25 +1,18 @@
-import axios from "axios";
+import buildClient from "../api/build-client";
 
-const HomePage = ({ data }) => {
-  const { currentUser } = data;
-  return <div>Home</div>;
+const LandingPage = ({ currentUser }) => {
+  return currentUser ? (
+    <h1>You are signed in</h1>
+  ) : (
+    <h1>You are NOT signed in</h1>
+  );
 };
 
-export const getServerSideProps = async (context) => {
-  const response = await axios.get("/api/users/currentuser");
-  return {
-    props: {
-      data: response.data,
-    },
-  };
+LandingPage.getInitialProps = async (context) => {
+  const client = buildClient(context);
+  const { data } = await client.get("/api/users/currentuser");
+
+  return data;
 };
 
-export default HomePage;
-
-// axios.get('/api/users/currentuser').catch((err) => {
-//   console.log(err.message);
-// });
-
-//ingress-nginx-controller
-
-//kubectl get services -n ingress-nginx
+export default LandingPage;

@@ -8,11 +8,15 @@ const LandingPage = ({ currentUser }) => {
   );
 };
 
-LandingPage.getInitialProps = async (context) => {
+export async function getServerSideProps(context) {
   const client = buildClient(context);
   const { data } = await client.get("/api/users/currentuser");
-
-  return data;
-};
+  const { currentUser } = data;
+  return {
+    props: {
+      currentUser,
+    }, // will be passed to the page component as props
+  };
+}
 
 export default LandingPage;

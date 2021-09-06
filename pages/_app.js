@@ -1,4 +1,3 @@
-import App from "next/app";
 import "bootstrap/dist/css/bootstrap.css";
 
 import Header from "../components/header";
@@ -15,8 +14,11 @@ const AppComponent = ({ Component, pageProps, currentUser }) => {
 };
 
 AppComponent.getInitialProps = async (appContext) => {
-  // for other pages that contain getinitialprops
-  const pageProps = await App.getInitialProps(appContext.ctx);
+  // for other pages that may contain getinitialprops - unlikely
+  let pageProps = {};
+  if (appContext.Component.getInitialProps) {
+    pageProps = await appContext.Component.getInitialProps(appContext.ctx);
+  }
 
   const client = buildClient(appContext.ctx);
   const { data } = await client.get("/api/users/currentuser");
